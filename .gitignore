@@ -1,0 +1,53 @@
+# Gradle
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio
+.idea/
+*.iml
+local.properties
+*.hprof
+
+# OS-specific
+# Mac OS X
+.DS_Store
+
+# Windows
+Thumbs.db
+*.bak
+*.tmp
+
+# Linux
+*~
+
+# Logs
+*.log
+
+# Generated files
+*.class
+*.dex
+*.apk
+*.ap_
+*.keystore
+*.jks
+
+# Java template files
+*.jar
+*.war
+*.ear
+
+# Unit test reports
+/test-report
+/test-result
+/test-output
+
+# Coverage reports
+/coverage-reports
+/coverage-result
+/coverage-output
+
+# IntelliJ
+*.ipr
+*.iws
+*.idea/
