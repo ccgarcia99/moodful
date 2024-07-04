@@ -25,7 +25,7 @@ fun MyTopBar() {
             Text(
                 text = ".moodful",
                 fontSize = 24.sp, // TODO: Implement a size, padding, and margin class
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.bodyMedium
             )
         },
     )
