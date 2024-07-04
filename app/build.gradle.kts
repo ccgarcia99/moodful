@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     // To use constraintlayout in compose
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.ui.text.google.fonts)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
