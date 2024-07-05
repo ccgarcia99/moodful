@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">moodful</string>
+    <string name="title_activity_form">FormActivity</string>
+    <string name="title_activity_diary">DiaryActivity</string>
 </resources>

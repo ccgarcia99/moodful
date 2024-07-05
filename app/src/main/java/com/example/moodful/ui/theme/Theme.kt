@@ -1,8 +1,6 @@
 package com.example.moodful.ui.theme
 
-import android.app.Activity
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -256,7 +254,7 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun MoodfulTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false, // Force light theme mode
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false, // Enforce not to use Material You's dynamicColor feature
     content: @Composable () -> Unit

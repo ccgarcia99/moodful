@@ -8,10 +8,10 @@
 
 package com.example.moodful.ui.theme
 
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.sp
 @Composable
 // CenterAlignedTopAppbar presets. Modify the look of the flavor text here
 fun MyTopBar() {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         title = {
             Text(
                 text = ".moodful",
                 fontSize = 24.sp, // TODO: Implement a size, padding, and margin class
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.labelLarge
             )
         },
     )

@@ -13,6 +13,16 @@
         android:theme="@style/Theme.Moodful"
         tools:targetApi="31">
         <activity
+            android:name=".DiaryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_diary"
+            android:theme="@style/Theme.Moodful" />
+        <activity
+            android:name=".FormActivity"
+            android:exported="false"
+            android:label="@string/title_activity_form"
+            android:theme="@style/Theme.Moodful" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
