@@ -6,6 +6,7 @@
 
 package com.example.moodful
 
+import com.example.moodful.pages.DiaryEntryPage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,7 +16,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.moodful.controller.ScreenController
-import com.example.moodful.pages.DiaryEntryPage
 import com.example.moodful.pages.DiaryView
 import com.example.moodful.pages.FrontPage
 

@@ -40,14 +40,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.moodful.controller.ScreenController
 import com.example.moodful.ui.theme.MoodfulTheme
 import java.text.DateFormat
@@ -56,8 +54,12 @@ import java.util.Calendar
 import java.util.Locale
 
 @Composable
-fun FrontPage(navController: NavController, modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
+fun FrontPage(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    previewExpanded: Boolean = false
+) {
+    var expanded by remember { mutableStateOf(previewExpanded) }
 
     MoodfulTheme {
         Scaffold{ innerPadding ->
@@ -277,23 +279,3 @@ fun ExpandableFAB(
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-fun FPPreviewPortrait() {
-    val mockNavController = rememberNavController()
-    FrontPage(navController = mockNavController)
-}
-
-@Preview(
-    showBackground = true,
-    widthDp = 640,
-    heightDp = 360
-)
-@Composable
-fun FPPreviewLandscape() {
-    val mockNavController = rememberNavController()
-    FrontPage(navController = mockNavController)
-}

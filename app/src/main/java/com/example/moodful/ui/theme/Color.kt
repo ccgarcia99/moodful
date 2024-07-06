@@ -217,3 +217,10 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1E1B13)
 val surfaceContainerDarkHighContrast = Color(0xFF222017)
 val surfaceContainerHighDarkHighContrast = Color(0xFF2D2A21)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF38352B)
+
+// MoodColorPalette
+val MoodBlue = Color(0xFF1E88E5)
+val MoodLightBlue = Color(0xFF42A5F5)
+val MoodPurple = Color(0xFF9C27B0)
+val MoodLightRed = Color(0xFFEF5350)
+val MoodRed = Color(0xFFE53935)
