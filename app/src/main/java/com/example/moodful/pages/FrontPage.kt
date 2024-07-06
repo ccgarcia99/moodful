@@ -1,15 +1,9 @@
-/*  name: FrontPage.kt
-    desc: Contains the front page of the App. It only shows the date & time,
-          and an expandable FAB that routes to different pages/activities of the app
-    date: July 5, 2024
-    author: Christian Clyde G. Decierdo
-* */
-
-package com.example.moodful
+package com.example.moodful.pages
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,61 +35,82 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.moodful.controller.ScreenController
 import com.example.moodful.ui.theme.MoodfulTheme
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
 @Composable
-fun FrontPage(modifier: Modifier = Modifier) {
-    MoodfulTheme(
-        dynamicColor = false,
-        darkTheme = false
-    ) {
-        Scaffold { innerPadding ->
+fun FrontPage(navController: NavController, modifier: Modifier = Modifier) {
+    var expanded by remember { mutableStateOf(false) }
+
+    MoodfulTheme {
+        Scaffold{ innerPadding ->
             Surface(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(innerPadding),
                 color = MaterialTheme.colorScheme.surface
             ) {
-                ConstraintLayout {
-                    // TODO: Unify all refs into one variable
-                    val dateRef = createRef()
-                    val timeRef = createRef()
-                    val floatingButtonRef = createRef()
-                    DateToday(
-                        modifier = Modifier
-                            .constrainAs(dateRef) {
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(timeRef.top, margin = 8.dp)
-                            }
+                val constraints = ConstraintSet {
+                    val dateLabel = createRefFor("dateLabel")
+                    val centerClock = createRefFor("centerClock")
+                    val expandableFAB = createRefFor("expandableFAB")
+
+                    createVerticalChain(dateLabel, centerClock, chainStyle = ChainStyle.Packed)
+
+                    constrain(dateLabel) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+
+                    constrain(centerClock) {
+                        top.linkTo(dateLabel.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+
+                    constrain(expandableFAB) {
+                        bottom.linkTo(parent.bottom, margin = 16.dp)
+                        end.linkTo(parent.end, margin = 16.dp)
+                    }
+                }
+
+                ConstraintLayout(
+                    constraintSet = constraints,
+                    modifier = modifier.fillMaxSize()
+                ) {
+                    DateLabel(modifier = Modifier.layoutId("dateLabel"))
+                    CenterClock(modifier = Modifier.layoutId("centerClock"))
+
+                    // Blurred background
+                    BlurredBackground(
+                        modifier = Modifier,
+                        visible = expanded
                     )
-                    DateAndTimeDisplay(
-                        modifier = Modifier
-                            .constrainAs(timeRef) {
-                                top.linkTo(parent.top)
-                                bottom.linkTo(parent.bottom)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                            }
-                    )
-                    HubButton(
-                        modifier = Modifier
-                            .constrainAs(floatingButtonRef) {
-                                bottom.linkTo(parent.bottom, margin = 8.dp)
-                                end.linkTo(parent.end, margin = 8.dp)
-                            }
+
+                    // Expandable FAB
+                    ExpandableFAB(
+                        navController = navController,
+                        modifier = Modifier.layoutId("expandableFAB"),
+                        expandedState = expanded,
+                        onExpandedStateChange = { expanded = it }
                     )
                 }
             }
@@ -104,7 +119,7 @@ fun FrontPage(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun DateToday(modifier: Modifier = Modifier) {
+fun DateLabel(modifier: Modifier = Modifier) {
     val calendar = Calendar.getInstance().time
     val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar)
     Row(
@@ -123,7 +138,7 @@ fun DateToday(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun DateAndTimeDisplay(modifier: Modifier = Modifier) {
+fun CenterClock(modifier: Modifier = Modifier) {
     val calendar = Calendar.getInstance().time
     val hourFormat = SimpleDateFormat("hh", Locale.getDefault()).format(calendar)
     val minuteFormat = SimpleDateFormat("mm", Locale.getDefault()).format(calendar)
@@ -132,20 +147,20 @@ fun DateAndTimeDisplay(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .padding(top = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Surface(
             modifier = modifier
-                .size(280.dp) // Ensure it's a square
+                .size(280.dp)
                 .clip(CircleShape),
             color = MaterialTheme.colorScheme.inversePrimary,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .padding(16.dp) // Inner padding for the content
+                modifier = Modifier.padding(16.dp)
             ) {
                 Text(
                     text = hourFormat,
@@ -153,8 +168,7 @@ fun DateAndTimeDisplay(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
                 Text(
                     text = minuteFormat,
@@ -162,8 +176,7 @@ fun DateAndTimeDisplay(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
                 Text(
                     text = amPmFormat,
@@ -171,19 +184,39 @@ fun DateAndTimeDisplay(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Light,
                     fontSize = 32.sp,
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
         }
     }
 }
 
+@Composable
+fun BlurredBackground(
+    modifier: Modifier = Modifier,
+    visible: Boolean
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
+                .blur(radius = 16.dp)
+        )
+    }
+}
 
 @Composable
-fun HubButton(modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
-
+fun ExpandableFAB(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    expandedState: Boolean,
+    onExpandedStateChange: (Boolean) -> Unit
+) {
     Box(
         modifier = modifier
             .wrapContentSize()
@@ -195,7 +228,7 @@ fun HubButton(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             AnimatedVisibility(
-                visible = expanded,
+                visible = expandedState,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -205,48 +238,42 @@ fun HubButton(modifier: Modifier = Modifier) {
                 ) {
                     ExtendedFloatingActionButton(
                         modifier = modifier.shadow(8.dp, RoundedCornerShape(16.dp)),
-                        text = { Text(
-                            "Create new entry",
-                            style = MaterialTheme.typography.labelLarge
-                        ) },
-                        onClick = { /* Action 1 */ },
+                        text = {
+                            Text(
+                                "Create new entry",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        },
+                        // Navigate to Diary Entry
+                        onClick = { navController.navigate(ScreenController.DiaryEntry.route) },
                         icon = { Icon(Icons.Filled.Create, "Create") }
                     )
                     ExtendedFloatingActionButton(
                         modifier = modifier.shadow(8.dp, RoundedCornerShape(16.dp)),
-                        text = { Text("Open diary",
-                            style = MaterialTheme.typography.labelLarge
-                        ) },
-                        onClick = { /* Action 2 */ },
+                        text = {
+                            Text(
+                                "Open diary",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        },
+                        onClick = { navController.navigate(ScreenController.DiaryView.route) },
                         icon = { Icon(Icons.Filled.Menu, "Menu") }
                     )
                 }
             }
 
             LargeFloatingActionButton(
-                onClick = { expanded = !expanded },
+                onClick = { onExpandedStateChange(!expandedState) },
                 shape = CircleShape,
                 contentColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer
             ) {
                 Icon(
-                    imageVector = if (expanded) Icons.Filled.Close else Icons.Filled.FavoriteBorder,
+                    imageVector = if (expandedState) Icons.Filled.Close else Icons.Filled.FavoriteBorder,
                     contentDescription = "More actions"
                 )
             }
         }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun HubButtonPreview() {
-    MoodfulTheme(
-        darkTheme = false,
-        dynamicColor = false
-    ) {
-        HubButton()
     }
 }
 
@@ -255,6 +282,18 @@ fun HubButtonPreview() {
     showSystemUi = true
 )
 @Composable
-fun AppPreview() {
-    FrontPage()
+fun FPPreviewPortrait() {
+    val mockNavController = rememberNavController()
+    FrontPage(navController = mockNavController)
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 640,
+    heightDp = 360
+)
+@Composable
+fun FPPreviewLandscape() {
+    val mockNavController = rememberNavController()
+    FrontPage(navController = mockNavController)
 }
