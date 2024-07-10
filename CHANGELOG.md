@@ -1,4 +1,8 @@
 # Changes:
+### July 10, 2024
+1. Implemented HSV color picker on DiaryEntry.kt
+2. Modified /self to include TODO list
+
 
 ### July 6, 2024
 
@@ -28,3 +32,8 @@
 4. Implemented first iteration of FrontPage activity w/ Java's date & time library.
 5. Implemented expandable large FAB w/ expanded FABs as children.
 6. Implemented Navigation Compose libraries.
+
+# TODO:
+1. Overhaul DiaryEntry.kt UI
+2. Refactor PresetParams.kt -> Reusables.kt
+3. Implement business logic on DiaryEntry.kt
