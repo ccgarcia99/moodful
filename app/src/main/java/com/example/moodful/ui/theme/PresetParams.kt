@@ -13,19 +13,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-
+// TODO: Rename to Reusables.kt. Refactor functions to reflect Kotlin file purpose
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 // CenterAlignedTopAppbar presets. Modify the look of the flavor text here
-fun MyTopBar() {
+fun DiaryEntryTopAppBar() {
     TopAppBar(
         title = {
             Text(
-                text = ".moodful",
+                text = "Create new entry",
                 fontSize = 24.sp, // TODO: Implement a size, padding, and margin class
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Light
             )
         },
     )
@@ -36,5 +38,5 @@ fun MyTopBar() {
 )
 @Composable
 fun ElementPreview() {  // Call a composable function within to render a preview
-    MyTopBar()
+    DiaryEntryTopAppBar()
 }

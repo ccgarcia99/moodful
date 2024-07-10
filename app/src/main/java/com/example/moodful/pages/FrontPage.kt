@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +49,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavController
 import com.example.moodful.controller.ScreenController
 import com.example.moodful.ui.theme.MoodfulTheme
+import kotlinx.coroutines.delay
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -62,7 +64,7 @@ fun FrontPage(
     var expanded by remember { mutableStateOf(previewExpanded) }
 
     MoodfulTheme {
-        Scaffold{ innerPadding ->
+        Scaffold { innerPadding ->
             Surface(
                 modifier = modifier
                     .fillMaxSize()
@@ -141,10 +143,18 @@ fun DateLabel(modifier: Modifier = Modifier) {
 
 @Composable
 fun CenterClock(modifier: Modifier = Modifier) {
-    val calendar = Calendar.getInstance().time
-    val hourFormat = SimpleDateFormat("hh", Locale.getDefault()).format(calendar)
-    val minuteFormat = SimpleDateFormat("mm", Locale.getDefault()).format(calendar)
-    val amPmFormat = SimpleDateFormat("a", Locale.getDefault()).format(calendar)
+    var time by remember { mutableStateOf(Calendar.getInstance().time) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            time = Calendar.getInstance().time
+            delay(1000)
+        }
+    }
+
+    val hourFormat = SimpleDateFormat("hh", Locale.getDefault()).format(time)
+    val minuteFormat = SimpleDateFormat("mm", Locale.getDefault()).format(time)
+    val amPmFormat = SimpleDateFormat("a", Locale.getDefault()).format(time)
 
     Box(
         modifier = modifier
@@ -278,4 +288,3 @@ fun ExpandableFAB(
         }
     }
 }
-

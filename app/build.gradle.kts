@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.navigation.compose)
+    implementation(libs.colorpicker.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
