@@ -54,7 +54,8 @@ fun Navigation() {
         }
         composable(route = ScreenController.DiaryEntry.route) {
             DiaryEntryPage(
-                colorViewModel = colorViewModel
+                colorViewModel = colorViewModel,
+                navController = navController
             )
         }
         composable(route = ScreenController.DiaryView.route) {

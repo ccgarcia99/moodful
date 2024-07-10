@@ -265,7 +265,7 @@ fun MoodfulTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> mediumContrastDarkColorScheme
+        darkTheme -> highContrastDarkColorScheme
         else -> mediumContrastLightColorScheme
     }
 

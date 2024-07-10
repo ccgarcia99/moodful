@@ -1,5 +1,7 @@
 package com.example.moodful
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import com.example.moodful.pages.DiaryEntryPage
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.moodful.pages.DiaryView
 import com.example.moodful.pages.FrontPage
+import com.example.moodful.ui.theme.MoodfulTheme
 
 @Preview(
     showBackground = true,
@@ -67,13 +70,23 @@ fun FPPreviewLandscape2() {
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
 @Composable
 fun DiaryEntryPreview(modifier: Modifier = Modifier) {
-    val colorViewModel: ColorViewModel = viewModel()
-    DiaryEntryPage(
-        colorViewModel = colorViewModel
-    )
+    val mockNavController = rememberNavController()
+    MoodfulTheme {
+        Surface(
+            modifier.fillMaxSize()
+        ) {
+            DiaryEntryPage(
+                navController = mockNavController,
+                colorViewModel = ColorViewModel()
+            )
+        }
+    }
 }
 
 @Preview(

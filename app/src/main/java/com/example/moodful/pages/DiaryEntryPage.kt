@@ -1,5 +1,6 @@
 package com.example.moodful.pages
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,121 +8,144 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.moodful.ColorViewModel
-import com.example.moodful.ui.theme.DiaryEntryTopAppBar
 import com.example.moodful.ui.theme.MoodfulTheme
+import com.example.moodful.ui.theme.ReusableTopAppBar
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-
-/*TODO:
-    1. Create UI Layout for DiaryEntry
-    2. Implement file-handling routines for DiaryEntry
-* */
-
-
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun DiaryEntryPage(
     colorViewModel: ColorViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     val showDialog = remember { mutableStateOf(false) }
     val selectedColor by colorViewModel.selectedColor.collectAsState()
+    val timestamp = remember { getCurrentTimestamp() }
 
     MoodfulTheme {
         Scaffold(
-            topBar = { DiaryEntryTopAppBar() }
+            topBar = { ReusableTopAppBar("Create new entry", navController) }
         ) { innerPadding ->
             Surface(
                 modifier = modifier
                     .padding(innerPadding)
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                color = MaterialTheme.colorScheme.surface
+                    .fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
             ) {
-                val constraints = ConstraintSet {
-                    val prototype = createRefFor("prototype")
-
-                    constrain(prototype) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                }
-                ConstraintLayout(
-                    constraintSet = constraints,
-                    modifier = modifier.fillMaxSize()
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .imePadding() // This will push the content up when the keyboard appears
                 ) {
+                    TimeStamp(timeStamp = timestamp)
                     ColorPickerRow(
                         selectedColor = selectedColor,
-                        showDialog = showDialog,
-                        modifier = modifier.layoutId("prototype")
+                        showDialog = showDialog
                     )
+                    TextEntry(
+                        modifier = Modifier.weight(1f),
+                        onTextChanged = { /* You can still use this if needed */ }
+                    )
+                }
 
-                    if (showDialog.value) {
-                        ColorPickerDialog(
-                            showDialog = showDialog,
-                            colorViewModel = colorViewModel
-                        )
-                    }
+                if (showDialog.value) {
+                    ColorPickerDialog(showDialog = showDialog, colorViewModel = colorViewModel)
                 }
             }
         }
     }
 }
 
+fun getCurrentTimestamp(): String {
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    return dateFormat.format(Date())
+}
+
+@Composable
+fun TimeStamp(
+    timeStamp: String,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clip(RoundedCornerShape(20.dp)),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        tonalElevation = 1.dp,
+    ) {
+        Text(
+            modifier = Modifier.padding(12.dp),
+            text = "Date: $timeStamp",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+    }
+}
+
+// Color Picker Functions
 @Composable
 fun ColorPickerRow(
     selectedColor: Color,
     showDialog: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
-    Box(
-      modifier = modifier
-          .fillMaxWidth()
-          .wrapContentHeight(),
-      contentAlignment = Alignment.Center
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = modifier
-                .wrapContentHeight()
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ){
-            ColorPickerPrompter(showDialog = showDialog)
-            CurrentColorMood(colorWays = selectedColor)
-        }
+        ColorPickerPrompter(showDialog = showDialog)
+        CurrentColorMood(colorWays = selectedColor)
     }
+    HorizontalDivider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+    )
 }
 
 @Composable
@@ -133,11 +157,31 @@ private fun ColorPickerPrompter(showDialog: MutableState<Boolean>) {
             text = "Pick a color",
             fontSize = 18.sp,
             fontWeight = FontWeight.Light,
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
         )
     }
 }
 
+@Composable
+private fun CurrentColorMood(
+    modifier: Modifier = Modifier,
+    colorWays: Color
+) {
+    Box(
+        modifier = modifier
+            .size(33.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.onSurface),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = modifier
+                .size(30.dp)
+                .clip(CircleShape)
+                .background(colorWays)
+        )
+    }
+}
 
 @Composable
 fun ColorPickerDialog(
@@ -153,7 +197,10 @@ fun ColorPickerDialog(
             }
         },
         title = {
-            Text(text = ".moodful")
+            Text(
+                text = ".moodful",
+                style = MaterialTheme.typography.titleLarge
+            )
         },
         text = {
             Column(
@@ -181,33 +228,69 @@ fun ColorPickerDialog(
                 )
             }
         },
-        dismissButton = {
-            TextButton(onClick = { showDialog.value = false }) {
-                Text("Cancel")
-            }
-        },
         modifier = Modifier.padding(16.dp) // Ensure proper padding around the dialog
     )
 }
 
 
 @Composable
-private fun CurrentColorMood(
+fun TextEntry(
     modifier: Modifier = Modifier,
-    colorWays: Color
-){
-    Box(
-        modifier = modifier
-            .width(30.dp)
-            .height(30.dp)
-    ){
-        Surface(
-            modifier = modifier
-                .clip(CircleShape)
-                .fillMaxSize(),
-            color = colorWays
+    onTextChanged: (String) -> Unit
+) {
+    var text by remember { mutableStateOf(TextFieldValue()) }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            // NOP
+            TextField(
+                value = text,
+                onValueChange = {
+                    text = it
+                    onTextChanged(it.text)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                ),
+                placeholder = { Text("What's on your mind?") },
+                singleLine = false,
+            )
+
+            Text(
+                text = "${text.text.length} characters",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(top = 8.dp)
+            )
+        }
+    }
+}
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
+@Composable
+fun UIComponent(modifier: Modifier = Modifier) {
+    val mockNavController = rememberNavController()
+    MoodfulTheme {
+        Surface(
+            modifier.fillMaxSize()
+        ) {
+            DiaryEntryPage(
+                navController = mockNavController,
+                colorViewModel = ColorViewModel()
+            )
         }
     }
 }

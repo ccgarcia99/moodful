@@ -69,7 +69,7 @@ fun FrontPage(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.surfaceBright
             ) {
                 val constraints = ConstraintSet {
                     val dateLabel = createRefFor("dateLabel")
@@ -134,7 +134,7 @@ fun DateLabel(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = "Today is $dateFormat",
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Light,
             fontSize = 20.sp
         )
@@ -177,7 +177,7 @@ fun CenterClock(modifier: Modifier = Modifier) {
                 Text(
                     text = hourFormat,
                     color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.titleLarge,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(vertical = 4.dp)
@@ -185,7 +185,7 @@ fun CenterClock(modifier: Modifier = Modifier) {
                 Text(
                     text = minuteFormat,
                     color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.titleLarge,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(vertical = 4.dp)
@@ -193,7 +193,7 @@ fun CenterClock(modifier: Modifier = Modifier) {
                 Text(
                     text = amPmFormat,
                     color = MaterialTheme.colorScheme.tertiary,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Light,
                     fontSize = 32.sp,
                     modifier = Modifier.padding(vertical = 4.dp)
@@ -278,7 +278,7 @@ fun ExpandableFAB(
                 onClick = { onExpandedStateChange(!expandedState) },
                 shape = CircleShape,
                 contentColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ) {
                 Icon(
                     imageVector = if (expandedState) Icons.Filled.Close else Icons.Filled.FavoriteBorder,

@@ -7,7 +7,6 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import com.example.moodful.R
 
 //TODO: Implement ArsenalSC font, thank you Yueyue!
-
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",
@@ -16,14 +15,14 @@ val provider = GoogleFont.Provider(
 
 val bodyFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Roboto"),
+        googleFont = GoogleFont("Roboto Serif"),
         fontProvider = provider,
     )
 )
 
 val displayFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Roboto"),
+        googleFont = GoogleFont("Arsenal"),
         fontProvider = provider,
     )
 )
