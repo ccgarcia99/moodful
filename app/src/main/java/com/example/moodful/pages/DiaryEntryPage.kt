@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -74,10 +76,11 @@ fun DiaryEntryPage(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .consumeWindowInsets(innerPadding) // Take up all available space
                         .imePadding() // This will push the content up when the keyboard appears
                 ) {
                     TimeStamp(timeStamp = timestamp)
-                    ColorPickerRow(
+                    ControlRow(
                         selectedColor = selectedColor,
                         showDialog = showDialog
                     )
@@ -88,7 +91,11 @@ fun DiaryEntryPage(
                 }
 
                 if (showDialog.value) {
-                    ColorPickerDialog(showDialog = showDialog, colorViewModel = colorViewModel)
+                    ColorPickerDialog(
+                        showDialog = showDialog,
+                        colorViewModel = colorViewModel,
+                        previousColor = selectedColor
+                    )
                 }
             }
         }
@@ -116,16 +123,17 @@ fun TimeStamp(
         Text(
             modifier = Modifier.padding(12.dp),
             text = "Date: $timeStamp",
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Normal,
             style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
         )
     }
 }
 
 // Color Picker Functions
 @Composable
-fun ColorPickerRow(
+fun ControlRow(
     selectedColor: Color,
     showDialog: MutableState<Boolean>,
     modifier: Modifier = Modifier
@@ -135,10 +143,11 @@ fun ColorPickerRow(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         ColorPickerPrompter(showDialog = showDialog)
-        CurrentColorMood(colorWays = selectedColor)
+        CurrentColorMood(colorWays = selectedColor, modifier = Modifier)
+        Spacer(modifier = Modifier.weight(1f))
+        SaveEntry()
     }
     HorizontalDivider(
         modifier = Modifier
@@ -171,7 +180,7 @@ private fun CurrentColorMood(
         modifier = modifier
             .size(33.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.onSurface),
+            .background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center
     ) {
         Box(
@@ -184,9 +193,22 @@ private fun CurrentColorMood(
 }
 
 @Composable
+private fun SaveEntry() {
+    TextButton(onClick = { /*TODO*/ }) {
+        Text(
+            text = "Save",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Light,
+            style = MaterialTheme.typography.labelMedium
+        )
+    }
+}
+
+@Composable
 fun ColorPickerDialog(
     showDialog: MutableState<Boolean>,
     colorViewModel: ColorViewModel,
+    previousColor: Color
 ) {
     val colorController = rememberColorPickerController()
     AlertDialog(
@@ -207,17 +229,19 @@ fun ColorPickerDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                CurrentColorMood(colorWays = previousColor)
                 HsvColorPicker(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .height(230.dp),
+                        .height(300.dp),
                     controller = colorController,
                     onColorChanged = { colorEnvelope: ColorEnvelope ->
                         colorViewModel.updateColor(colorEnvelope.color)
-                    }
+                    },
+                    initialColor = previousColor
                 )
                 Text(
                     text = "pick a color that best describes your mood",

@@ -5,6 +5,9 @@
 3. Modified overall app theme and typography
 4. Refactored PresetParams.kt to Reusables.kt
 5. Implemented second iteration of DiaryEntryPage.kt user interface
+6. Adjusted UI elements in DiaryEntryPage.kt
+7. Changed ColorPickerRow to ControlRow
+8. Implemented Save TextButton composable
 
 
 ### July 6, 2024
