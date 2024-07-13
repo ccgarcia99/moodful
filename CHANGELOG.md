@@ -1,4 +1,8 @@
 # Changes:
+### July 13, 2024
+1. Successfully migrated from kapt to KSP
+2. Integrated Room DB dependency
+
 ### July 10, 2024
 1. Implemented HSV color picker on DiaryEntry.kt
 2. Modified /self to include TODO list
