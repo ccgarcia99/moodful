@@ -6,6 +6,7 @@
 
 package com.example.moodful
 
+import android.annotation.SuppressLint
 import com.example.moodful.pages.DiaryEntryPage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,7 +25,7 @@ import com.example.moodful.pages.FrontPage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class ColorViewModel : ViewModel() {
+class DiaryViewModel : ViewModel() {
     private val _selectedColor = MutableStateFlow(Color.Red)
     val selectedColor: StateFlow<Color> = _selectedColor
 
@@ -44,17 +45,18 @@ class MainActivity : ComponentActivity() {
 }
 
 // Navigation controller composable function
+@SuppressLint("NewApi")
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    val colorViewModel: ColorViewModel = viewModel()
+    val diaryViewModel: DiaryViewModel = viewModel()
     NavHost(navController = navController, startDestination = ScreenController.FrontPage.route) {
         composable(route = ScreenController.FrontPage.route) {
             FrontPage(navController = navController)
         }
         composable(route = ScreenController.DiaryEntry.route) {
             DiaryEntryPage(
-                colorViewModel = colorViewModel,
+                diaryViewModel = diaryViewModel,
                 navController = navController
             )
         }

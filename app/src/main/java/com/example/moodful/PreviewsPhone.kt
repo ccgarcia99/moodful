@@ -6,7 +6,6 @@ import com.example.moodful.pages.DiaryEntryPage
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.moodful.pages.DiaryView
 import com.example.moodful.pages.FrontPage
@@ -83,7 +82,7 @@ fun DiaryEntryPreview(modifier: Modifier = Modifier) {
         ) {
             DiaryEntryPage(
                 navController = mockNavController,
-                colorViewModel = ColorViewModel()
+                diaryViewModel = DiaryViewModel()
             )
         }
     }
