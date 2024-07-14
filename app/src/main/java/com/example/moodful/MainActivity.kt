@@ -130,7 +130,10 @@ fun Navigation(diaryViewModel: DiaryViewModel) {
             )
         }
         composable(route = ScreenController.DiaryView.route) {
-            DiaryView(diaryViewModel = diaryViewModel)
+            DiaryView(
+                navController = navController,
+                diaryViewModel = diaryViewModel
+            )
         }
     }
 }

@@ -1,5 +1,7 @@
 # Changes:
-### July 14, 2024
+### Version 1.0
+
+##### July 14, 2024
 1. Implemented quantitative rating in DiaryEntry
 2. Made the UI scrollable in DiaryEntry.kt
 3. Integrated Room Database into the app
@@ -7,12 +9,14 @@
 5. Integrated Fetch functionality
 6. Implemented first iteration of DiaryView.kt
 7. Added a Toast when Save Entry button is pressed
+8. Implemented delete entry function
+9. Adjusted some UI elements
 
-### July 13, 2024
+##### July 13, 2024
 1. Successfully migrated from kapt to KSP
 2. Integrated Room DB dependency
 
-### July 10, 2024
+##### July 10, 2024
 1. Implemented HSV color picker on DiaryEntry.kt
 2. Modified /self to include TODO list
 3. Modified overall app theme and typography
@@ -23,7 +27,7 @@
 8. Implemented Save TextButton composable
 
 
-### July 6, 2024
+##### July 6, 2024
 
 1. Implemented blur animation when ExpandableFAB is pressed
 2. Refactored FrontPage.kt
@@ -35,7 +39,7 @@
 8. Created a separate file to preview UI elements(PreviewsPhone.kt)
 9. Refactored ScreenController.kt
 
-### July 5, 2024
+##### July 5, 2024
 
 1. Restructured project to accommodate navigation implementation
 2. New Kotlin files created. See files for description:
@@ -43,7 +47,7 @@
    2.2 DiaryEntry.kt`
 3. Enforced light-mode in Theme.kt
 
-### Previous Changes
+##### Previous Changes
 
 1. First iteration of project structure and configurations.
 2. Implemented ConstraintLayout dependency.
@@ -53,5 +57,4 @@
 6. Implemented Navigation Compose libraries.
 
 # TODO:
-1. Implement business logic on DiaryEntry.kt
-2. Implement Toast UI element when SaveEntry is tapped.
+
