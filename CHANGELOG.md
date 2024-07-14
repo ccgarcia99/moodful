@@ -2,6 +2,8 @@
 ### July 14, 2024
 1. Implemented quantitative rating in DiaryEntry
 2. Made the UI scrollable in DiaryEntry.kt
+3. Integrated Room Database into the app
+4. Integrated Create and Insert functionality 
 
 ### July 13, 2024
 1. Successfully migrated from kapt to KSP

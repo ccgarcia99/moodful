@@ -74,25 +74,6 @@ fun FPPreviewLandscape2() {
     showSystemUi = true
 )
 @Composable
-fun DiaryEntryPreview(modifier: Modifier = Modifier) {
-    val mockNavController = rememberNavController()
-    MoodfulTheme {
-        Surface(
-            modifier.fillMaxSize()
-        ) {
-            DiaryEntryPage(
-                navController = mockNavController,
-                diaryViewModel = DiaryViewModel()
-            )
-        }
-    }
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
 fun DViewPreview() {
     DiaryView()
 }

@@ -43,11 +43,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.moodful.DiaryViewModel
 import com.example.moodful.ui.theme.MoodfulTheme
 import com.example.moodful.ui.theme.ReusableTopAppBar
@@ -68,6 +66,7 @@ fun DiaryEntryPage(
     val selectedColor by diaryViewModel.selectedColor.collectAsState()
     val (currentDate, currentTime) = remember { getCurrentDateAndTime() }
     var selectedRating by remember { mutableStateOf<Int?>(null) }
+    var diaryText by remember { mutableStateOf(TextFieldValue()) }
 
     MoodfulTheme {
         Scaffold(
@@ -77,7 +76,7 @@ fun DiaryEntryPage(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .imePadding() // This will push the content up when the keyboard appears
+                    .imePadding()
             ) {
                 Column(
                     modifier = modifier
@@ -87,7 +86,17 @@ fun DiaryEntryPage(
                     DateTimeDisplay(date = currentDate, time = currentTime)
                     ControlRow(
                         selectedColor = selectedColor,
-                        showDialog = showDialog
+                        showDialog = showDialog,
+                        onSaveClick = {
+                            diaryViewModel.insertDiaryEntry(
+                                date = currentDate,
+                                time = currentTime,
+                                rating = selectedRating ?: 0,
+                                color = selectedColor,
+                                text = diaryText.text
+                            )
+                            navController.popBackStack() // Go back to the previous screen
+                        }
                     )
                     Text(
                         text = "How would you rate your mood?",
@@ -103,8 +112,8 @@ fun DiaryEntryPage(
                         onRatingSelected = { selectedRating = it }
                     )
                     TextEntry(
-                        modifier = modifier.fillMaxWidth(),
-                        onTextChanged = { /* You can still use this if needed */ }
+                        text = diaryText,
+                        onTextChanged = { diaryText = it }
                     )
                 }
             }
@@ -117,6 +126,82 @@ fun DiaryEntryPage(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ControlRow(
+    selectedColor: Color,
+    showDialog: MutableState<Boolean>,
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ColorPickerPrompter(showDialog = showDialog)
+        CurrentColorMood(colorWays = selectedColor, modifier = Modifier)
+        Spacer(modifier = Modifier.weight(1f))
+        SaveEntryButton(onClick = onSaveClick)
+    }
+    HorizontalDivider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
+    )
+}
+
+@Composable
+fun SaveEntryButton(onClick: () -> Unit) {
+    TextButton(
+        onClick = onClick,
+        modifier = Modifier.padding(4.dp)
+    ) {
+        Text(
+            text = "Save",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Light,
+            style = MaterialTheme.typography.labelMedium
+        )
+    }
+}
+
+@Composable
+fun TextEntry(
+    text: TextFieldValue,
+    onTextChanged: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(16.dp)
+    ) {
+        TextField(
+            value = text,
+            onValueChange = { onTextChanged(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(380.dp), // Set a fixed height for the TextField
+            textStyle = MaterialTheme.typography.bodyMedium,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+            ),
+            placeholder = { Text("What's on your mind?") },
+            singleLine = false,
+        )
+
+        Text(
+            text = "${text.text.length} characters",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(top = 8.dp)
+        )
     }
 }
 
@@ -210,31 +295,6 @@ fun DateTimeDisplay(
 
 // Color Picker Functions
 @Composable
-fun ControlRow(
-    selectedColor: Color,
-    showDialog: MutableState<Boolean>,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        ColorPickerPrompter(showDialog = showDialog)
-        CurrentColorMood(colorWays = selectedColor, modifier = Modifier)
-        Spacer(modifier = Modifier.weight(1f))
-        SaveEntry()
-    }
-    HorizontalDivider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
-    )
-}
-
-@Composable
 private fun ColorPickerPrompter(showDialog: MutableState<Boolean>) {
     TextButton(
         onClick = { showDialog.value = true }
@@ -265,18 +325,6 @@ private fun CurrentColorMood(
                 .size(30.dp)
                 .clip(CircleShape)
                 .background(colorWays)
-        )
-    }
-}
-
-@Composable
-private fun SaveEntry() {
-    TextButton(onClick = { /*TODO*/ }) {
-        Text(
-            text = "Save",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Light,
-            style = MaterialTheme.typography.labelMedium
         )
     }
 }
@@ -333,62 +381,3 @@ fun ColorPickerDialog(
     )
 }
 
-
-@Composable
-fun TextEntry(
-    modifier: Modifier = Modifier,
-    onTextChanged: (String) -> Unit
-) {
-    var text by remember { mutableStateOf(TextFieldValue()) }
-
-    Column(
-        modifier = modifier.padding(16.dp)
-    ) {
-        TextField(
-            value = text,
-            onValueChange = {
-                text = it
-                onTextChanged(it.text)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(380.dp), // Set a fixed height for the TextField
-            textStyle = MaterialTheme.typography.bodyMedium,
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-            ),
-            placeholder = { Text("What's on your mind?") },
-            singleLine = false,
-        )
-
-        Text(
-            text = "${text.text.length} characters",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(top = 8.dp)
-        )
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-fun UIComponent(modifier: Modifier = Modifier) {
-    val mockNavController = rememberNavController()
-    MoodfulTheme {
-        Surface(
-            modifier.fillMaxSize()
-        ) {
-            DiaryEntryPage(
-                navController = mockNavController,
-                diaryViewModel = DiaryViewModel()
-            )
-        }
-    }
-}
