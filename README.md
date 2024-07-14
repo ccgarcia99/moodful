@@ -1,5 +1,6 @@
 # Changes:
 ### Version 1.0
+* Minimum viable product of .moodful implemented
 
 ##### July 14, 2024
 1. Implemented quantitative rating in DiaryEntry
