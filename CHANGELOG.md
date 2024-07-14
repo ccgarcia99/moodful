@@ -4,6 +4,9 @@
 2. Made the UI scrollable in DiaryEntry.kt
 3. Integrated Room Database into the app
 4. Integrated Create and Insert functionality 
+5. Integrated Fetch functionality
+6. Implemented first iteration of DiaryView.kt
+7. Added a Toast when Save Entry button is pressed
 
 ### July 13, 2024
 1. Successfully migrated from kapt to KSP
@@ -51,3 +54,4 @@
 
 # TODO:
 1. Implement business logic on DiaryEntry.kt
+2. Implement Toast UI element when SaveEntry is tapped.

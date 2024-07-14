@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DiaryEntryDao {
@@ -12,7 +13,7 @@ interface DiaryEntryDao {
     suspend fun insert(diaryEntry: DiaryEntry)
 
     @Query("SELECT * FROM diary_entries ORDER BY date DESC, time DESC")
-    suspend fun getAllEntries(): List<DiaryEntry>
+    fun getAllEntries(): Flow<List<DiaryEntry>>
 
     @Delete
     suspend fun deleteEntry(diaryEntry: DiaryEntry)

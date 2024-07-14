@@ -15,6 +15,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -29,6 +31,7 @@ import com.example.moodful.data.DiaryRepository
 import com.example.moodful.pages.DiaryEntryPage
 import com.example.moodful.pages.DiaryView
 import com.example.moodful.pages.FrontPage
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -36,6 +39,9 @@ import kotlinx.coroutines.launch
 class DiaryViewModel(private val repository: DiaryRepository) : ViewModel() {
     private val _selectedColor = MutableStateFlow(Color.Red)
     val selectedColor: StateFlow<Color> = _selectedColor
+
+    private val _entrySaved = MutableLiveData<Boolean>()
+    val entrySaved: LiveData<Boolean> get() = _entrySaved
 
     fun updateColor(color: Color) {
         _selectedColor.value = color
@@ -52,10 +58,15 @@ class DiaryViewModel(private val repository: DiaryRepository) : ViewModel() {
             )
             Log.d("DiaryViewModel", "Inserting diary entry: $diaryEntry")
             repository.insert(diaryEntry)
+            _entrySaved.postValue(true)
         }
     }
 
-    suspend fun getAllEntries(): List<DiaryEntry> {
+    fun resetEntrySaved() {
+        _entrySaved.value = false
+    }
+
+    fun getAllEntries(): Flow<List<DiaryEntry>> {
         return repository.getAllEntries()
     }
 
@@ -73,6 +84,7 @@ class DiaryViewModel(private val repository: DiaryRepository) : ViewModel() {
         }
     }
 }
+
 class DiaryViewModelFactory(private val repository: DiaryRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DiaryViewModel::class.java)) {
@@ -118,7 +130,8 @@ fun Navigation(diaryViewModel: DiaryViewModel) {
             )
         }
         composable(route = ScreenController.DiaryView.route) {
-            DiaryView()
+            DiaryView(diaryViewModel = diaryViewModel)
         }
     }
 }
+

@@ -1,6 +1,7 @@
 package com.example.moodful.data
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class DiaryRepository(private val diaryEntryDao: DiaryEntryDao) {
@@ -11,11 +12,8 @@ class DiaryRepository(private val diaryEntryDao: DiaryEntryDao) {
         }
     }
 
-    suspend fun getAllEntries(): List<DiaryEntry> {
-        return withContext(Dispatchers.IO) {
-            Log.d("DiaryRepository", "Fetching all diary entries from database")
-            diaryEntryDao.getAllEntries()
-        }
+    fun getAllEntries(): Flow<List<DiaryEntry>> {
+        return diaryEntryDao.getAllEntries()
     }
 
     suspend fun deleteEntry(diaryEntry: DiaryEntry) {

@@ -68,12 +68,3 @@ fun FPPreviewLandscape2() {
         previewExpanded = true
     )
 }
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-fun DViewPreview() {
-    DiaryView()
-}
