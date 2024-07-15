@@ -113,11 +113,12 @@ fun DiaryEntryPage(
                     Text(
                         text = "How would you rate your mood?",
                         modifier = modifier
-                            .padding(start = 16.dp, top = 16.dp)
+                            .padding(top = 16.dp)
                             .fillMaxWidth(),
                         fontSize = 18.sp,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
                     )
                     MoodRating(
                         selectedRating = selectedRating,
