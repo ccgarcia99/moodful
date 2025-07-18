@@ -62,6 +62,6 @@
 
 ##### AUTHORS
 1. Christian Clyde Decierdo
-2. Donyl Amorganda
+2. Donyl Amorganda | [Github](https://github.com/OnlyDcodes)
 3. Paolo Enrera
 4. Francis Espinoza
