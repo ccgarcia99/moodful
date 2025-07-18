@@ -60,5 +60,8 @@
 5. Implemented expandable large FAB w/ expanded FABs as children.
 6. Implemented Navigation Compose libraries.
 
-# TODO:
-
+##### AUTHORS
+Christian Clyde Decierdo
+Donyl Amorganda
+Paolo Enrera
+Francis Espinoza
