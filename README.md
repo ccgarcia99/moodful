@@ -61,7 +61,7 @@
 6. Implemented Navigation Compose libraries.
 
 ##### AUTHORS
-Christian Clyde Decierdo
-Donyl Amorganda
-Paolo Enrera
-Francis Espinoza
+1. Christian Clyde Decierdo
+2. Donyl Amorganda
+3. Paolo Enrera
+4. Francis Espinoza
